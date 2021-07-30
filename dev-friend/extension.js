@@ -11,9 +11,9 @@ const { Timer } = require('timer-node');
  */
 
 const timer = new Timer();
+let number_of_lines = 0;
 
 function activate(context) {
-
     const helloWorldId = 'dev-friend.helloWorld'; 
 	const startTimerId = 'dev-friend.startTimer'; 
     const pauseTimerId = 'dev-friend.pauseTimer'; 
@@ -24,12 +24,13 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand(startTimerId, () => {
         vscode.window.showInformationMessage('Timer started!');
+		captureLinesOfCode(number_of_lines);
         if (timer.isStarted()) {
             timer.resume(); 
             this.hydrate = setInterval(hydratedTask,1800000);
             this.rest = setInterval(restTask,3000000);
         } else {
-            timer.start(); 
+			timer.start(); 
             this.hydrate = setInterval(hydratedTask,1800000);
             this.rest = setInterval(restTask,3000000);
         }
@@ -38,12 +39,14 @@ function activate(context) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand(pauseTimerId, () => {
-        vscode.window.showInformationMessage('Timer paused!');
+        vscode.window.showInformationMessage(`Timer is paused! Lines of code written: ${number_of_lines}`);
         timer.pause();
         clearInterval(this.hydrate);
         clearInterval(this.rest);
         updatePauseButton(); 
     }));
+
+	
 
     currentTime = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 20);
     currentTime.text = "00:00:00";
@@ -85,6 +88,23 @@ const hydratedTask = () =>  {
 
 const restTask = () =>  {
     vscode.window.showInformationMessage('Have A Break And Take Rest!');
+}
+
+const captureLinesOfCode = ()=>{
+	vscode.workspace.onDidChangeTextDocument(event => {
+		let start = event.contentChanges[0].range.start;
+		let end = event.contentChanges[0].range.end;
+		if (start.line == end.line && start.character==end.character) {
+			console.log(start,end,lines,number_of_lines);
+		}
+		else{
+			let diff = Math.abs(start.line-end.line) ? Math.abs(start.line-end.line) : 1;
+			let lines = event.contentChanges[0].range.isEmpty ? diff  : 0 ;
+			number_of_lines+=diff;
+			console.log(start,end,lines,number_of_lines);
+		}
+	  });
+
 }
 
 // this method is called when your extension is deactivated
