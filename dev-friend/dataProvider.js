@@ -2,17 +2,23 @@ const vscode = require('vscode');
 
 class DataProvider {
   constructor(timer,userData) {
-    
     this.users = [
       {
         first: "Today",
-        position: { Hours: (userData[0].h + timer.time().h), Minutes: (userData[0].m + timer.time().m) },
+        position: { 
+            Hours: userData[0] === undefined ? timer.time().h : userData[0].h + timer.time().h, 
+            Minutes: userData[0] === undefined ? timer.time().m : userData[0].m + timer.time().m
+        },
       },
       {
         first: "Yesterday",
-        position: { Hours: userData[1].h, Minutes: userData[1].m },
-      },
+        position: { 
+            Hours: userData[1] === undefined ? 0 : userData[1].h, 
+            Minutes: userData[1] === undefined ? 0 : userData[1].m 
+        },
+      }
     ];
+
     this.userTreeItems = this.convertUsersToTreeItems();
   }
 

@@ -1,15 +1,21 @@
 {
   "name": "dev-friend",
   "displayName": "Dev Friend",
+  "publisher": "DevFriend",
+  "icon": "assets/imgs/logo.png",
   "description": "A productivity based extension to track time and get notifications about remaining hydrated etc.",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.58.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/MLH-Fellowship/pod-3.1.4-DevFriendly.git"
+  },
+  "categories": ["Other"],
+  "keywords": ["Dev", "Friend","Memes", "Dev Friend","Time Tracking","Productivity Tracker"],
   "activationEvents": [
+    "*",
     "onCommand:dev-friend.helloWorld",
     "onCommand:dev-friend.startTimer",
     "onCommand:dev-friend.pauseTimer",
